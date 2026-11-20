@@ -1,16 +1,40 @@
 package com.mycompany.tienda3a.modelo;
 
-/** Agrupación de productos para búsqueda y reportes. */
 public class Categoria {
-
-    private int id;
+    private int idCategoria;
     private String nombre;
+    private String descripcion;
+    private boolean activo;
 
-    public Categoria(int id, String nombre) {
-        this.id = id;
-        this.nombre = nombre;
+    public Categoria(int idCategoria, String nombre, String descripcion) {
+        this.idCategoria = idCategoria;
+        setNombre(nombre);
+        this.descripcion = descripcion;
+        this.activo = true;
     }
 
-    public int getId() { return id; }
+    public void desactivar() {
+        activo = false;
+    }
+
+    public int getIdCategoria() { return idCategoria; }
+    public void setIdCategoria(int idCategoria) { this.idCategoria = idCategoria; }
     public String getNombre() { return nombre; }
+
+    public void setNombre(String nombre) {
+        if (nombre == null || nombre.isBlank()) {
+            throw new IllegalArgumentException("El nombre de la categoría es obligatorio.");
+        }
+        this.nombre = nombre.trim();
+    }
+
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }

@@ -2,35 +2,51 @@ package com.mycompany.tienda3a.modelo;
 
 import java.time.LocalDateTime;
 
-/**
- * Salida o reingreso de stock causado por una venta o su anulación (RN-08).
- * Restricciones: cantidad > 0.
- */
 public class MovimientoInventario {
-
-    public enum Tipo { SALIDA_VENTA, REINGRESO_ANULACION }
-
-    private int id;
+    private int idMovimiento;
     private Producto producto;
-    private Tipo tipo;
+    private DetalleVenta detalleVenta;
+    private Cajero cajero;
+    private LocalDateTime fechaHora;
+    private TipoMovimiento tipo;
     private double cantidad;
     private double saldoResultante;
-    private LocalDateTime fecha;
 
-    public MovimientoInventario(int id, Producto producto, Tipo tipo, double cantidad) {
+    public MovimientoInventario(int idMovimiento, Producto producto, DetalleVenta detalleVenta, Cajero cajero,
+                                TipoMovimiento tipo, double cantidad) {
         if (cantidad <= 0) {
-            throw new IllegalArgumentException("La cantidad debe ser mayor que cero.");
+            throw new IllegalArgumentException("La cantidad del movimiento debe ser mayor que cero.");
         }
-        this.id = id;
+        this.idMovimiento = idMovimiento;
         this.producto = producto;
+        this.detalleVenta = detalleVenta;
+        this.cajero = cajero;
         this.tipo = tipo;
         this.cantidad = cantidad;
-        this.fecha = LocalDateTime.now();
-        double delta = (tipo == Tipo.SALIDA_VENTA) ? -cantidad : cantidad;
-        producto.ajustarStock(delta);
-        this.saldoResultante = producto.getStockActual();
+        this.fechaHora = LocalDateTime.now();
     }
 
+    public void aplicar() {
+        if (tipo == TipoMovimiento.SALIDA_VENTA) {
+            producto.descontarStock(cantidad);
+        } else {
+            producto.reingresarStock(cantidad);
+        }
+        saldoResultante = producto.getStockActual();
+    }
+
+    public void cargarDatos(LocalDateTime fechaHora, double saldoResultante) {
+        this.fechaHora = fechaHora;
+        this.saldoResultante = saldoResultante;
+    }
+
+    public int getIdMovimiento() { return idMovimiento; }
+    public void setIdMovimiento(int idMovimiento) { this.idMovimiento = idMovimiento; }
+    public Producto getProducto() { return producto; }
+    public DetalleVenta getDetalleVenta() { return detalleVenta; }
+    public Cajero getCajero() { return cajero; }
+    public LocalDateTime getFechaHora() { return fechaHora; }
+    public TipoMovimiento getTipo() { return tipo; }
+    public double getCantidad() { return cantidad; }
     public double getSaldoResultante() { return saldoResultante; }
-    public Tipo getTipo() { return tipo; }
 }

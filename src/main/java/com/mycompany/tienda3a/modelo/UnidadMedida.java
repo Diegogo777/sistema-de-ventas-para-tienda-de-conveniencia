@@ -1,7 +1,16 @@
 package com.mycompany.tienda3a.modelo;
 
-/** producto.unidad_medida IN ('UNIDAD','KG'). Ver S-05: venta a granel. */
 public enum UnidadMedida {
-    UNIDAD,
-    KG
+    UNIDAD("Unidad"),
+    KG("Kilogramo");
+
+    private final String etiqueta;
+
+    UnidadMedida(String etiqueta) {
+        this.etiqueta = etiqueta;
+    }
+
+    public String getEtiqueta() {
+        return etiqueta;
+    }
 }

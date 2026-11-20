@@ -1,39 +1,34 @@
 package com.mycompany.tienda3a.modelo;
 
-/**
- * Punto de cobro de la tienda (hasta 3 cajas, S-01). Define las series de sus
- * comprobantes: serieBoleta (B00n, usada por venta simple y boleta) y
- * serieFactura (F00n).
- */
 public class Caja {
-
-    private int id;
-    private String nombre;
+    private int idCaja;
+    private String codigo;
     private String serieBoleta;
     private String serieFactura;
-    private int correlativoBoleta;
-    private int correlativoFactura;
+    private boolean activo;
 
-    public Caja(int id, String nombre, String serieBoleta, String serieFactura) {
-        this.id = id;
-        this.nombre = nombre;
+    public Caja(int idCaja, String codigo, String serieBoleta, String serieFactura) {
+        this.idCaja = idCaja;
+        this.codigo = codigo;
         this.serieBoleta = serieBoleta;
         this.serieFactura = serieFactura;
-        this.correlativoBoleta = 0;
-        this.correlativoFactura = 0;
+        this.activo = true;
     }
 
-    /** RF-11: correlativo consecutivo e irrepetible por serie. */
-    public int siguienteCorrelativoBoleta() {
-        return ++correlativoBoleta;
+    public String obtenerSerie(TipoComprobante tipo) {
+        return tipo == TipoComprobante.FACTURA ? serieFactura : serieBoleta;
     }
 
-    public int siguienteCorrelativoFactura() {
-        return ++correlativoFactura;
-    }
-
-    public int getId() { return id; }
-    public String getNombre() { return nombre; }
+    public int getIdCaja() { return idCaja; }
+    public void setIdCaja(int idCaja) { this.idCaja = idCaja; }
+    public String getCodigo() { return codigo; }
     public String getSerieBoleta() { return serieBoleta; }
     public String getSerieFactura() { return serieFactura; }
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
+
+    @Override
+    public String toString() {
+        return codigo;
+    }
 }

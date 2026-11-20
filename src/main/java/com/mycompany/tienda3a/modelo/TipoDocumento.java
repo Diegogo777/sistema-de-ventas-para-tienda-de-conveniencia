@@ -1,7 +1,16 @@
 package com.mycompany.tienda3a.modelo;
 
-/** cliente.tipo_documento IN ('DNI','RUC'). */
 public enum TipoDocumento {
-    DNI,
-    RUC
+    DNI("DNI"),
+    RUC("RUC");
+
+    private final String etiqueta;
+
+    TipoDocumento(String etiqueta) {
+        this.etiqueta = etiqueta;
+    }
+
+    public String getEtiqueta() {
+        return etiqueta;
+    }
 }

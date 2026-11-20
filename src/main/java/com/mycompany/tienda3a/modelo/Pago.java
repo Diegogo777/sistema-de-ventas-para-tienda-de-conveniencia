@@ -1,43 +1,65 @@
 package com.mycompany.tienda3a.modelo;
 
-/**
- * Cobro de una venta con un medio de pago (CU-05).
- * Restricciones: EFECTIVO exige montoEntregado >= monto; otro medio exige
- * referenciaDigital.
- */
-public class Pago {
+import java.time.LocalDateTime;
 
-    private int id;
-    private Venta venta;
-    private MedioDePago medio;
-    private double monto;
-    private double montoEntregado;
-    private String referenciaDigital;
-    private boolean revertido;
+public abstract class Pago {
+    protected int idPago;
+    protected Venta venta;
+    protected Cajero cajero;
+    protected LocalDateTime fechaHora;
+    protected double monto;
+    protected EstadoPago estado;
+    protected LocalDateTime fechaReversion;
+    protected Cajero cajeroReversion;
+    protected CierreCaja cierreReversion;
 
-    public Pago(int id, Venta venta, MedioDePago medio, double monto,
-                double montoEntregado, String referenciaDigital) {
-        if (medio == MedioDePago.EFECTIVO && montoEntregado < monto) {
-            throw new IllegalArgumentException("El monto entregado no cubre el total.");
+    public Pago(int idPago, Venta venta, Cajero cajero, double monto, LocalDateTime fechaHora) {
+        if (monto <= 0) {
+            throw new IllegalArgumentException("El monto del pago debe ser mayor que cero.");
         }
-        if (medio != MedioDePago.EFECTIVO && (referenciaDigital == null || referenciaDigital.isBlank())) {
-            throw new IllegalArgumentException("Falta el número de operación.");
-        }
-        this.id = id;
+        this.idPago = idPago;
         this.venta = venta;
-        this.medio = medio;
-        this.monto = monto;
-        this.montoEntregado = montoEntregado;
-        this.referenciaDigital = referenciaDigital;
+        this.cajero = cajero;
+        this.monto = Venta.redondear2(monto);
+        this.fechaHora = fechaHora == null ? LocalDateTime.now() : fechaHora;
+        this.estado = EstadoPago.REGISTRADO;
     }
 
-    public double getVuelto() {
-        return medio == MedioDePago.EFECTIVO ? montoEntregado - monto : 0.0;
+    public abstract boolean validar();
+
+    public abstract MedioPago getMedio();
+
+    public void revertir(Cajero cajero) {
+        if (estado == EstadoPago.REVERTIDO) {
+            throw new IllegalStateException("El pago ya fue revertido.");
+        }
+        estado = EstadoPago.REVERTIDO;
+        fechaReversion = LocalDateTime.now();
+        cajeroReversion = cajero;
     }
 
-    public void revertir() { this.revertido = true; }
+    public void asignarCierreReversion(CierreCaja cierre) {
+        this.cierreReversion = cierre;
+    }
 
-    public MedioDePago getMedio() { return medio; }
+    public boolean estaRevertido() {
+        return estado == EstadoPago.REVERTIDO;
+    }
+
+    public void cargarReversion(EstadoPago estado, LocalDateTime fechaReversion, Cajero cajeroReversion) {
+        this.estado = estado;
+        this.fechaReversion = fechaReversion;
+        this.cajeroReversion = cajeroReversion;
+    }
+
+    public int getIdPago() { return idPago; }
+    public void setIdPago(int idPago) { this.idPago = idPago; }
+    public Venta getVenta() { return venta; }
+    public Cajero getCajero() { return cajero; }
+    public LocalDateTime getFechaHora() { return fechaHora; }
     public double getMonto() { return monto; }
-    public boolean isRevertido() { return revertido; }
+    public EstadoPago getEstado() { return estado; }
+    public LocalDateTime getFechaReversion() { return fechaReversion; }
+    public Cajero getCajeroReversion() { return cajeroReversion; }
+    public CierreCaja getCierreReversion() { return cierreReversion; }
 }

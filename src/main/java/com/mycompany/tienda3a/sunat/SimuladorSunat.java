@@ -1,17 +1,38 @@
 package com.mycompany.tienda3a.sunat;
 
 import com.mycompany.tienda3a.modelo.Comprobante;
+import com.mycompany.tienda3a.modelo.RespuestaSunat;
 import java.util.Random;
 
-/** PV-23: simulador interno que devuelve ACEPTADO o RECHAZADO (no se conecta a SUNAT). */
 public class SimuladorSunat implements AdaptadorSunat {
+    private final Random azar;
+    private final int porcentajeSinRespuesta;
+    private final int porcentajeRechazo;
 
-    private final Random azar = new Random();
+    public SimuladorSunat() {
+        this(new Random(), 8, 4);
+    }
+
+    public SimuladorSunat(Random azar, int porcentajeSinRespuesta, int porcentajeRechazo) {
+        this.azar = azar;
+        this.porcentajeSinRespuesta = porcentajeSinRespuesta;
+        this.porcentajeRechazo = porcentajeRechazo;
+    }
 
     @Override
-    public boolean enviar(Comprobante comprobante) {
-        boolean aceptado = azar.nextInt(100) < 90; // ~90% aceptado, para la demo
-        comprobante.registrarIntentoEnvio(aceptado, aceptado ? null : "Rechazado por el simulador de SUNAT.");
-        return aceptado;
+    public RespuestaSunat enviar(Comprobante comprobante) {
+        int n = azar.nextInt(100);
+        if (n < porcentajeRechazo) {
+            return RespuestaSunat.RECHAZADO;
+        }
+        if (n < porcentajeRechazo + porcentajeSinRespuesta) {
+            return RespuestaSunat.SIN_RESPUESTA;
+        }
+        return RespuestaSunat.ACEPTADO;
+    }
+
+    @Override
+    public RespuestaSunat comunicarAnulacion(Comprobante comprobante) {
+        return RespuestaSunat.ACEPTADO;
     }
 }

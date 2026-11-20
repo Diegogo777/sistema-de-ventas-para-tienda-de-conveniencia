@@ -1,26 +1,27 @@
 package com.mycompany.tienda3a.modelo;
 
-/**
- * Comprobante con el DNI del cliente (RN-05).
- * 2da subclase de Comprobante (relación de herencia #2), usa super(...)
- * para reutilizar la inicialización común.
- */
+import java.time.LocalDateTime;
+
 public class Boleta extends Comprobante {
+    public Boleta(int idComprobante, Venta venta, String serie, int correlativo, LocalDateTime fechaEmision) {
+        super(idComprobante, venta, serie, correlativo, fechaEmision);
+    }
 
-    private Cliente cliente;
+    @Override
+    public TipoComprobante getTipo() {
+        return TipoComprobante.BOLETA;
+    }
 
-    public Boleta(int id, Venta venta, String serie, int correlativo, Cliente cliente) {
-        super(id, venta, serie, correlativo);
-        if (cliente.getTipoDocumento() != TipoDocumento.DNI) {
-            throw new IllegalArgumentException("La boleta requiere un cliente con DNI.");
-        }
-        this.cliente = cliente;
+    @Override
+    public boolean validarDatos() {
+        Cliente c = venta.getCliente();
+        return c != null && c.getTipoDocumento() == TipoDocumento.DNI;
     }
 
     @Override
     public String generarImpresion() {
-        return encabezado("BOLETA")
-             + "Cliente: " + cliente.getNombreORazonSocial()
-             + " | DNI: " + cliente.getNumeroDocumento() + "\n";
+        Cliente c = venta.getCliente();
+        return armarTicket("BOLETA DE VENTA ELECTRONICA",
+                "Cliente: " + c.getNombreRazonSocial() + "\nDNI    : " + c.getNumeroDocumento() + "\n");
     }
 }

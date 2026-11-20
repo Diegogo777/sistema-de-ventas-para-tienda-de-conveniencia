@@ -1,9 +1,16 @@
 package com.mycompany.tienda3a.modelo;
 
-/**
- * Roles del sistema (tabla usuario, restricción rol IN ('CAJERO','ADMINISTRADOR')).
- */
 public enum Rol {
-    CAJERO,
-    ADMINISTRADOR
+    CAJERO("Cajero"),
+    ADMINISTRADOR("Administrador");
+
+    private final String etiqueta;
+
+    Rol(String etiqueta) {
+        this.etiqueta = etiqueta;
+    }
+
+    public String getEtiqueta() {
+        return etiqueta;
+    }
 }

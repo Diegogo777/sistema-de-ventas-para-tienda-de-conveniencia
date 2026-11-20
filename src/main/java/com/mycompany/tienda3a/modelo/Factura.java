@@ -1,25 +1,28 @@
 package com.mycompany.tienda3a.modelo;
 
-/**
- * Comprobante con RUC y razón social del cliente (RN-05).
- * 3ra subclase de Comprobante (relación de herencia #3).
- */
+import java.time.LocalDateTime;
+
 public class Factura extends Comprobante {
+    public Factura(int idComprobante, Venta venta, String serie, int correlativo, LocalDateTime fechaEmision) {
+        super(idComprobante, venta, serie, correlativo, fechaEmision);
+    }
 
-    private Cliente cliente;
+    @Override
+    public TipoComprobante getTipo() {
+        return TipoComprobante.FACTURA;
+    }
 
-    public Factura(int id, Venta venta, String serie, int correlativo, Cliente cliente) {
-        super(id, venta, serie, correlativo);
-        if (cliente.getTipoDocumento() != TipoDocumento.RUC) {
-            throw new IllegalArgumentException("La factura requiere un cliente con RUC.");
-        }
-        this.cliente = cliente;
+    @Override
+    public boolean validarDatos() {
+        Cliente c = venta.getCliente();
+        return c != null && c.getTipoDocumento() == TipoDocumento.RUC && !c.getNombreRazonSocial().isBlank();
     }
 
     @Override
     public String generarImpresion() {
-        return encabezado("FACTURA")
-             + "Razón social: " + cliente.getNombreORazonSocial()
-             + " | RUC: " + cliente.getNumeroDocumento() + "\n";
+        Cliente c = venta.getCliente();
+        String dir = c.getDireccion() == null || c.getDireccion().isBlank() ? "" : "Dir.   : " + c.getDireccion() + "\n";
+        return armarTicket("FACTURA ELECTRONICA",
+                "Razón social: " + c.getNombreRazonSocial() + "\nRUC    : " + c.getNumeroDocumento() + "\n" + dir);
     }
 }

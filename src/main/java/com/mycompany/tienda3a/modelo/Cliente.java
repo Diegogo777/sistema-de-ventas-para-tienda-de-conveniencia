@@ -1,28 +1,58 @@
 package com.mycompany.tienda3a.modelo;
 
-/** Comprador identificado en boletas (DNI) y facturas (RUC). */
 public class Cliente {
-
-    private int id;
+    private int idCliente;
     private TipoDocumento tipoDocumento;
     private String numeroDocumento;
-    private String nombreORazonSocial;
+    private String nombreRazonSocial;
+    private String direccion;
+    private boolean activo;
 
-    public Cliente(int id, TipoDocumento tipoDocumento, String numeroDocumento, String nombreORazonSocial) {
-        if (tipoDocumento == TipoDocumento.DNI && (numeroDocumento == null || numeroDocumento.length() != 8)) {
-            throw new IllegalArgumentException("El DNI debe tener 8 dígitos.");
+    public Cliente(int idCliente, TipoDocumento tipoDocumento, String numeroDocumento,
+                   String nombreRazonSocial, String direccion) {
+        if (tipoDocumento == null) {
+            throw new IllegalArgumentException("Elige el tipo de documento.");
         }
-        if (tipoDocumento == TipoDocumento.RUC && (numeroDocumento == null || numeroDocumento.length() != 11)) {
-            throw new IllegalArgumentException("El RUC debe tener 11 dígitos.");
-        }
-        this.id = id;
+        this.idCliente = idCliente;
         this.tipoDocumento = tipoDocumento;
-        this.numeroDocumento = numeroDocumento;
-        this.nombreORazonSocial = nombreORazonSocial;
+        setNumeroDocumento(numeroDocumento);
+        setNombreRazonSocial(nombreRazonSocial);
+        this.direccion = direccion == null ? "" : direccion.trim();
+        this.activo = true;
     }
 
-    public int getId() { return id; }
+    public void desactivar() {
+        activo = false;
+    }
+
+    public int getIdCliente() { return idCliente; }
+    public void setIdCliente(int idCliente) { this.idCliente = idCliente; }
     public TipoDocumento getTipoDocumento() { return tipoDocumento; }
     public String getNumeroDocumento() { return numeroDocumento; }
-    public String getNombreORazonSocial() { return nombreORazonSocial; }
+
+    public void setNumeroDocumento(String numeroDocumento) {
+        if (numeroDocumento == null || numeroDocumento.isBlank()) {
+            throw new IllegalArgumentException("El número de documento es obligatorio.");
+        }
+        this.numeroDocumento = numeroDocumento.trim();
+    }
+
+    public String getNombreRazonSocial() { return nombreRazonSocial; }
+
+    public void setNombreRazonSocial(String nombreRazonSocial) {
+        if (nombreRazonSocial == null || nombreRazonSocial.isBlank()) {
+            throw new IllegalArgumentException("El nombre o la razón social es obligatorio.");
+        }
+        this.nombreRazonSocial = nombreRazonSocial.trim();
+    }
+
+    public String getDireccion() { return direccion; }
+    public void setDireccion(String direccion) { this.direccion = direccion == null ? "" : direccion.trim(); }
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
+
+    @Override
+    public String toString() {
+        return nombreRazonSocial + " · " + tipoDocumento + " " + numeroDocumento;
+    }
 }

@@ -1,0 +1,7 @@
+Fuentes incluidas en el proyecto (libres, licencia SIL Open Font License 1.1):
+
+- Poppins (Regular, Medium y Bold) - Indian Type Foundry - https://fonts.google.com/specimen/Poppins
+- Liberation Mono (Regular y Bold) - Red Hat - https://github.com/liberationfonts/liberation-fonts
+
+La licencia SIL OFL 1.1 permite usarlas, incluirlas y distribuirlas con el programa.
+Texto completo: https://openfontlicense.org

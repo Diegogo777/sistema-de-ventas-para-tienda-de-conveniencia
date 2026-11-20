@@ -1,9 +1,18 @@
 package com.mycompany.tienda3a.modelo;
 
-/** venta.estado IN ('EN_CURSO','CONFIRMADA','CANCELADA','ANULADA'). */
 public enum EstadoVenta {
-    EN_CURSO,
-    CONFIRMADA,
-    CANCELADA,
-    ANULADA
+    EN_CURSO("En curso"),
+    CONFIRMADA("Confirmada"),
+    CANCELADA("Cancelada"),
+    ANULADA("Anulada");
+
+    private final String etiqueta;
+
+    EstadoVenta(String etiqueta) {
+        this.etiqueta = etiqueta;
+    }
+
+    public String getEtiqueta() {
+        return etiqueta;
+    }
 }
