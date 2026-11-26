@@ -56,7 +56,7 @@ public final class App {
                 System.err.println(e.getMessage());
             }
         } else {
-            System.err.println("MySQL no responde (" + ConexionMySQL.getUltimoError() + "). Se usan datos de ejemplo en memoria.");
+            System.err.println("MySQL no responde (" + ConexionMySQL.getUltimoError() + "). Se usan datos de ejemplo.");
         }
         return DatosIniciales.crear();
     }
