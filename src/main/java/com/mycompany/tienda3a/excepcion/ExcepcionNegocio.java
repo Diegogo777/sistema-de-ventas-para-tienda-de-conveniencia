@@ -9,3 +9,4 @@ public class ExcepcionNegocio extends RuntimeException {
         super(mensaje, causa);
     }
 }
+//prueba negocio java 
