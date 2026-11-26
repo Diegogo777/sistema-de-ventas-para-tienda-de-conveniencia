@@ -10,3 +10,4 @@ public class ExcepcionNegocio extends RuntimeException {
     }
 }
 //prueba negocio java 
+//1.2 fijarse bien
